@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.store.mapper.UserMapper">
+	
+	<resultMap type="cn.tedu.store.entity.User" id="UserEntityMap">
+		<id column="uid" property="uid"/>
+		<result column="is_delete" property="isDelete"/>
+		<result column="created_user" property="createdUser"/>
+		<result column="created_time" property="createdTime"/>
+		<result column="modified_user" property="modifiedUser"/>
+		<result column="modified_time" property="modifiedTime"/>
+	</resultMap>
+	
+	<!--插入用户数据-->
+	<!-- Integer insert(User user) -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="uid">
+		INSERT INTO t_user(
+			username,password,
+			salt,gender,
+			phone,email,
+			avatar,is_delete,
+			created_user,created_time,
+			modified_user,modified_time
+		) VALUE(
+			#{username},#{password},
+			#{salt},#{gender},
+			#{phone},#{gender},
+			#{avatar},#{isDelete},
+			#{createdUser}, #{createdTime},
+			#{modifiedUser}, #{modifiedTime}
+		)	
+	</insert>
+	
+	<!-- /**
+	 * 修改用户密码
+	 * @param uid 用户id
+	 * @param avatar 用户头像
+	 * @param modifiedUser 修改用户执行人
+	 * @param modifiedTime 修改时间
+	 * @return 受影响行数
+	 */
+	Integer updateAvatarByUid(
+			@Param("uid") Integer uid,
+			@Param("avatar") String avatar,
+			@Param("modifiedUser") String modifiedUser,
+			@Param("modifiedTime") Date modifiedTime); -->
+	<update id="updateAvatarByUid">
+		UPDATE 
+			t_user
+		SET
+			avatar=#{avatar},
+			modified_user=#{modifiedUser},
+			modified_time=#{modifiedTime}
+		WHERE
+			uid=#{uid}
+	</update>
+	
+	<!-- /**
+	 * 修改用户密码
+	 * @param uid 用户id
+	 * @param password 用户密码
+	 * @param modifiedUser 修改用户执行人
+	 * @param modifiedTime 修改时间
+	 * @return 受影响行数
+	 */ -->
+	<!-- Integer updatePasswordByUid(
+			@Param("uid") Integer uid,
+			@Param("password") String password,
+			@Param("modifiedUser") String modifiedUser,
+			@Param("modifiedTime") Date modifiedTime); -->
+	<update id="updatePasswordByUid">
+		UPDATE 
+			t_user
+		SET
+			password=#{password},
+			modified_user=#{modifiedUser},
+			modified_time=#{modifiedTime}
+		WHERE
+			uid=#{uid}
+	</update>
+	
+	<!-- /**
+	 * 根据用户的id更新用户基本信息
+	 * @param user 封装了用户的id和新的信息对象
+	 * @return 受影响的行数
+	 */ -->
+	<!-- Integer updateInfoByUid(User user); -->
+	
+	<update id="updateInfoByUid">
+		UPDATE
+			t_user
+		SET
+			phone=#{phone},
+			email=#{email},
+			gender=#{gender},
+			modified_user=#{modifiedUser},
+			modified_time=#{modifiedTime}
+		WHERE
+			uid=#{uid}
+	</update>
+	
+	<!-- /**
+	 * 根据用户id查询用户数据详情
+	 * @param uid 用户id
+	 * @return 匹配的用户数据,如果没有匹配的数据,则返回null
+	 */ -->
+	<!-- User findByUid(Integer uid); -->
+	<select id="findByUid" resultMap="UserEntityMap">
+		SELECT 
+			*
+		FROM
+			t_user
+		WHERE
+			uid=#{uid}
+	</select>
+	
+	
+	<!-- 根据用户名查询查询用户数据详情 -->
+	<!-- User findByusername(String username) -->
+	<select id="findByusername" resultMap="UserEntityMap">
+		SELECT
+			 * 
+		FROM 
+			t_user
+		WHERE
+			username=#{username}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

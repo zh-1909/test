@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.store.mapper.DistrictMapper">
+	<!-- 
+	 * 查询城市
+	 * @param uid
+	 * @return
+	 */
+	Integer findByParent(String parent); -->
+	<select id="findByParent" resultType="cn.tedu.store.entity.District">
+		SELECT * FROM
+			 t_dict_district
+		 WHERE 
+		 	parent=#{parent} 
+		 ORDER BY code 
+	</select>
+	
+	<!-- /**
+	 * 
+	 * @param code
+	 * @return
+	 */
+	String findNameByCode(String code);
+	 -->
+	 <select id="findNameByCode" resultType="java.lang.String">
+	 	
+	 	SELECT name FROM t_dict_district WHERE code=#{code}
+	 	
+	 </select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

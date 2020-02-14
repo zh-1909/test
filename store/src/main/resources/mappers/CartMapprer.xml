@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.store.mapper.CartMapper">
+	
+	<resultMap type="cn.tedu.store.entity.Cart" id="UserEntityCart">
+		<id column="cid" property="cid"/>
+		<result column="created_user" property="createdUser"/>
+		<result column="created_time" property="createdTime"/>
+		<result column="modified_user" property="modifiedUser"/>
+		<result column="modified_time" property="modifiedTime"/>
+	</resultMap>
+	
+	<!--插入用户数据-->
+	<!-- Integer insert(Cart cart) -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="cid">
+		INSERT INTO t_cart(
+			uid,pid,
+			num,price,
+			created_user,created_time,
+			modified_user,modified_time
+		) VALUE(
+			#{uid},#{pid},
+			#{num},#{price},
+			#{createdUser}, #{createdTime},
+			#{modifiedUser}, #{modifiedTime}
+		)	
+	</insert>
+	
+	<!--**
+	 * 修改购物车购买商品数量
+	 * @param uid
+	 * @param pid
+	 * @param modifiedUser
+	 * @param modifiedTime
+	 * @return
+	 */
+	Integer updataNumByCid(
+			@Param("uid") Integer uid,
+			@Param("pid") Integer pid,
+			@Param("modifiedUser") String modifiedUser,
+			@Param("modifiedTime")Date modifiedTime);-->
+	<update id="updataNumByCid">
+		Update
+			 t_cart set num=#{num},
+			 modified_user=#{modifiedUser},
+			 modified_time=#{modifiedTime} 
+		where
+			 cid=#{cid}
+	</update>
+	
+	<!-- /**
+	 * 根据用户
+	 * @param uid
+	 * @param pid
+	 * @return
+	 */
+	Cart findByUidAndPid(@Param("uid") 
+	Integer uid,@Param("pid") Integer pid); -->
+	<select id="findByUidAndPid" resultMap="UserEntityCart">
+		SELECT 
+			*
+		FROM
+			t_cart
+		WHERE
+			uid=#{uid} And pid=#{pid}
+	</select>
+	
+	<!-- /**
+	 * 查询购物车列表信息
+	 * @param uid
+	 * @return
+	 */
+	List<CartVO> findVOByUid(Integer uid); -->
+	<select id="findVOByUid" resultType="cn.tedu.store.vo.CartVO">
+		SELECT 
+			cid,uid,
+			pid,t_cart.num,t_cart.price,
+			title,t_product.price AS realPrice,image
+		FROM
+			t_cart
+		LEFT JOIN
+			t_product
+		ON
+			t_cart.pid=t_product.id
+		WHERE
+			uid=#{uid}
+		ORDER BY
+			t_cart.created_time DESC
+	</select>
+	
+	<!--/**
+	 * 查询用户订单
+	 * @param cids
+	 * @return
+	 */
+	List<CartVO> findVOByCids(Integer[] cids);-->
+	<select id="findVOByCids" resultType="cn.tedu.store.vo.CartVO">
+		SELECT 
+			cid,uid,
+			pid,t_cart.num,t_cart.price,
+			title,t_product.price AS realPrice,image
+		FROM
+			t_cart
+		LEFT JOIN
+			t_product
+		ON
+			t_cart.pid=t_product.id
+		WHERE
+			cid IN
+			<foreach collection="array" 
+			item="cid" separator=","
+			open="(" close=")">
+			#{cid}
+		</foreach>
+		ORDER BY
+			t_cart.created_time DESC
+	</select>
+	
+	<!-- 根据购物车数据id查询购物车数据详情 -->
+	<!-- Cart findByCid(Integer cid) -->
+	<select id="findByCid" resultMap="UserEntityCart">
+		SELECT
+			*
+		FROM
+			t_cart
+		WHERE
+			cid=#{cid}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
